@@ -1,0 +1,4 @@
+model,params,mae_y5,mae_y10,epochs,train_s
+U-Net (base),677122,0.011080254,0.036011074,,
+single_conv_block,882,0.014681716,0.057648618,40.0,18.0
+small_dense,148352,0.029043537,0.06179913,40.0,11.0

@@ -1,0 +1,3 @@
+setup,n_train,params,epochs,mae_y5,mae_y10,train_s
+"single z-plane (z=0), 32 filters",170,2704898,40,0.038662348,0.07075902,11
+"all z-planes, 16 filters",9298,677122,40,0.012340445,0.04061986,167
