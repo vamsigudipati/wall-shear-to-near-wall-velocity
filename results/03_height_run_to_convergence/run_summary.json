@@ -1,0 +1,182 @@
+{
+ "samples": 11554,
+ "splits": {
+  "time (later snapshots held out)": {
+   "train": 9298,
+   "test": 2256
+  },
+  "planes (spanwise planes 48-49 and 80-89 held out)": {
+   "train": 10272,
+   "test": 1282
+  }
+ },
+ "device": "/CPU:0",
+ "repeat_seeds": false,
+ "training": {
+  "time (later snapshots held out) | seed 0": {
+   "epochs": 300,
+   "best_epoch": 300,
+   "train_s": 1249.63232588768,
+   "stopped_by": "epoch cap"
+  },
+  "planes (spanwise planes 48-49 and 80-89 held out) | seed 0": {
+   "epochs": 300,
+   "best_epoch": 300,
+   "train_s": 1377.4216091632843,
+   "stopped_by": "epoch cap"
+  }
+ },
+ "part_a": [
+  {
+   "y_plus": 5.0,
+   "target spread": 0.09550029784440994,
+   "1-D U-Net": 0.19140031933784485,
+   "ridge": 0.2172529857884369,
+   "viscous-sublayer linear law": 0.3584527373313904,
+   "training mean": 1.0008763074874878,
+   "U-Net min": 0.19140031933784485,
+   "U-Net max": 0.19140031933784485,
+   "U-Net seeds": 1,
+   "earlier 150-epoch U-Net": 0.1914933770895004,
+   "earlier min": 0.1883361041545868,
+   "earlier max": 0.1947022527456283,
+   "changes beyond seed range": false,
+   "advantage over ridge, this run": 0.02585266645059206,
+   "advantage over ridge, earlier": 0.02575960869893651,
+   "beats ridge in every seed": true
+  },
+  {
+   "y_plus": 10.0,
+   "target spread": 0.14684593677520752,
+   "1-D U-Net": 0.4029581546783447,
+   "ridge": 0.4808329807571933,
+   "viscous-sublayer linear law": 1.110595464706421,
+   "training mean": 1.0010128021240234,
+   "U-Net min": 0.4029581546783447,
+   "U-Net max": 0.4029581546783447,
+   "U-Net seeds": 1,
+   "earlier 150-epoch U-Net": 0.3922052184740702,
+   "earlier min": 0.3741869032382965,
+   "earlier max": 0.4046770334243774,
+   "changes beyond seed range": false,
+   "advantage over ridge, this run": 0.07787482607884855,
+   "advantage over ridge, earlier": 0.08862776228312308,
+   "beats ridge in every seed": true
+  },
+  {
+   "y_plus": 15.0,
+   "target spread": 0.15568210184574127,
+   "1-D U-Net": 0.6380030512809753,
+   "ridge": 0.7102407220054052,
+   "viscous-sublayer linear law": 2.398123264312744,
+   "training mean": 1.001022219657898,
+   "U-Net min": 0.6380030512809753,
+   "U-Net max": 0.6380030512809753,
+   "U-Net seeds": 1,
+   "earlier 150-epoch U-Net": 0.6105154951413473,
+   "earlier min": 0.5755578875541687,
+   "earlier max": 0.6327354311943054,
+   "changes beyond seed range": true,
+   "advantage over ridge, this run": 0.07223767072442988,
+   "advantage over ridge, earlier": 0.09972522686405794,
+   "beats ridge in every seed": true
+  },
+  {
+   "y_plus": 30.0,
+   "target spread": 0.12949001789093018,
+   "1-D U-Net": 1.0012398958206177,
+   "ridge": 0.9805009273940126,
+   "viscous-sublayer linear law": 8.476522445678711,
+   "training mean": 1.0013258457183838,
+   "U-Net min": 1.0012398958206177,
+   "U-Net max": 1.0012398958206177,
+   "U-Net seeds": 1,
+   "earlier 150-epoch U-Net": 0.9457210501035056,
+   "earlier min": 0.8783566951751709,
+   "earlier max": 0.988898754119873,
+   "changes beyond seed range": true,
+   "advantage over ridge, this run": -0.020738968426605053,
+   "advantage over ridge, earlier": 0.03477987729050702,
+   "beats ridge in every seed": false
+  },
+  {
+   "y_plus": 125.0,
+   "target spread": 0.05000856891274452,
+   "1-D U-Net": 1.066317081451416,
+   "ridge": 1.1125548006758674,
+   "viscous-sublayer linear law": 139.34437561035156,
+   "training mean": 1.0247453451156616,
+   "U-Net min": 1.066317081451416,
+   "U-Net max": 1.066317081451416,
+   "U-Net seeds": 1,
+   "earlier 150-epoch U-Net": 1.0400307178497314,
+   "earlier min": 1.000886082649231,
+   "earlier max": 1.0981955528259275,
+   "changes beyond seed range": false,
+   "advantage over ridge, this run": 0.04623771922445141,
+   "advantage over ridge, earlier": 0.07252408282613598,
+   "beats ridge in every seed": true
+  }
+ ],
+ "part_b": [
+  {
+   "y_plus": 5.0,
+   "1-D U-Net": 0.1900782734155655,
+   "ridge": 0.20568573850562644,
+   "viscous-sublayer linear law": 0.36380311846733093,
+   "training mean": 1.0006829500198364,
+   "earlier 150-epoch U-Net": 0.1905068159103393,
+   "earlier min": 0.1895440369844436,
+   "earlier max": 0.1923668384552002,
+   "earlier ridge": 0.2056857385056264
+  },
+  {
+   "y_plus": 10.0,
+   "1-D U-Net": 0.39693424105644226,
+   "ridge": 0.4520483447559823,
+   "viscous-sublayer linear law": 1.1242653131484985,
+   "training mean": 1.0008422136306763,
+   "earlier 150-epoch U-Net": 0.3938811222712199,
+   "earlier min": 0.392883837223053,
+   "earlier max": 0.3958532810211181,
+   "earlier ridge": 0.4520483447559823
+  },
+  {
+   "y_plus": 15.0,
+   "1-D U-Net": 0.620197594165802,
+   "ridge": 0.6645648443372435,
+   "viscous-sublayer linear law": 2.4267055988311768,
+   "training mean": 1.0008835792541504,
+   "earlier 150-epoch U-Net": 0.6112101276715597,
+   "earlier min": 0.6101863384246826,
+   "earlier max": 0.6127393841743469,
+   "earlier ridge": 0.6645648443372435
+  },
+  {
+   "y_plus": 30.0,
+   "1-D U-Net": 0.9676575064659119,
+   "ridge": 0.9271958566098019,
+   "viscous-sublayer linear law": 8.594747543334961,
+   "training mean": 1.0009682178497314,
+   "earlier 150-epoch U-Net": 0.9491181373596193,
+   "earlier min": 0.9462114572525024,
+   "earlier max": 0.9523804783821106,
+   "earlier ridge": 0.927195856609802
+  },
+  {
+   "y_plus": 125.0,
+   "1-D U-Net": 1.1017556190490723,
+   "ridge": 1.062568134591325,
+   "viscous-sublayer linear law": 144.3509063720703,
+   "training mean": 1.0698652267456055,
+   "earlier 150-epoch U-Net": 1.051295320192973,
+   "earlier min": 1.0241661071777344,
+   "earlier max": 1.069316029548645,
+   "earlier ridge": 1.062568134591325
+  }
+ ],
+ "longest_training_min": 22.957026819388073,
+ "wall_min": 44.0,
+ "tensorflow": "2.18.1",
+ "keras": "3.6.0"
+}
