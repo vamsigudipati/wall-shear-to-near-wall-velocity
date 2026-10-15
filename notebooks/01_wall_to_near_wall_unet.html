@@ -7834,7 +7834,7 @@ notebook builds the dataset directly as NumPy arrays, rather than a streaming
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Stage-1-%E2%80%94-From-wall-shear-stress-to-near-wall-velocity-with-a-1-D-U-Net">Stage 1 — From wall shear stress to near-wall velocity with a 1-D U-Net<a class="anchor-link" href="#Stage-1-%E2%80%94-From-wall-shear-stress-to-near-wall-velocity-with-a-1-D-U-Net">¶</a></h1><p><strong>Portfolio project: how much of the near-wall flow can the wall shear stress tell us?</strong></p>
-<p>Wall models in RANS and LES see only the wall: the shear stress. This notebook asks how much that one quantity tells about the flow just above it. From 5,777 y–x planes of the streamwise velocity in a turbulent channel-flow simulation (Re_τ ≈ 125, 201 × 384 points per plane), it computes the wall gradient τ_w(x) at both walls with a second-order one-sided difference on the stretched grid, and trains a 1-D U-Net (four levels, 677,122 weights) to map the 384-point τ_w(x) to u(x) at y+ ≈ 5 and 10. It compares the result with the viscous-sublayer linear law. I solve the notebook's five exercises (more heights, a local friction velocity, spanwise planes against model size under a snapshot-wise split, a gradient attribution, much smaller models), repeat every training with the seeds 0, 1 and 2, and record a training animation.</p>
+<p>Wall models in RANS and LES see only the wall: the shear stress. This notebook asks how much that one quantity tells about the flow just above it. From 5,777 y–x planes of the streamwise velocity in a turbulent channel-flow simulation (Re_τ ≈ 125, 201 × 384 points per plane), it computes the wall gradient τ_w(x) at both walls with a second-order one-sided difference on the stretched grid, and trains a 1-D U-Net (four levels, 677,122 weights) to map the 384-point τ_w(x) to u(x) at y+ ≈ 5 and 10. It compares the result with the viscous-sublayer linear law. I solve the notebook's five experiments (more heights, a local friction velocity, spanwise planes against model size under a snapshot-wise split, a gradient attribution, much smaller models), repeat every training with the seeds 0, 1 and 2, and record a training animation.</p>
 <p><strong>How it connects.</strong> Stage 2 holds the comparison to stricter terms: the correct linear law, ridge regression on the same input, targets up to the channel centre, and splits that hold out later snapshots or unseen spanwise planes.</p>
 <p><strong>About the outputs.</strong> The outputs below come from my single run (Apple M3 Max, 2026-10-13, CPU only: every network here trains faster on the CPU than on the Apple GPU). Afterwards I changed only text for this repository: this cell and the paths cell, the path lines (planes from <code>../release_assets/u_yx_planes_h5/</code>, model to <code>../models/01_wall_to_near_wall_unet/</code>, tables to <code>../results/01_wall_to_near_wall_unet/</code>, animation to <code>../animations/01_*</code>), comments, labels and printed text. Two quirks are kept as written: the linear-law baseline leaves out the viscosity (τ_w here is du/dy, so the friction velocity is √(ν·|du/dy|)) and takes the top-wall gradient with the opposite sign, so its error is about a thousand times the U-Net's; and the random split puts both walls and all spanwise planes of a snapshot on both sides. Stage 2 corrects both comparisons.</p>
 </div>
@@ -11289,26 +11289,26 @@ than about the viscous sublayer itself -- worth checking explicitly.</p>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="15.-Exercises">15. Exercises<a class="anchor-link" href="#15.-Exercises">¶</a></h1><h2 id="Exercise-1----Push-further-from-the-wall">Exercise 1 -- Push further from the wall<a class="anchor-link" href="#Exercise-1----Push-further-from-the-wall">¶</a></h2><p>Add $y^+=20$, $30$, $50$ as additional targets (Section 6-7). The linear-law
+<h1 id="15.-Experiments">15. Experiments<a class="anchor-link" href="#15.-Experiments">¶</a></h1><h2 id="Experiment-1----Push-further-from-the-wall">Experiment 1 -- Push further from the wall<a class="anchor-link" href="#Experiment-1----Push-further-from-the-wall">¶</a></h2><p>Add $y^+=20$, $30$, $50$ as additional targets (Section 6-7). The linear-law
 baseline should break down much more severely beyond the buffer layer
 ($y^+ \gtrsim 30$, entering the log-law region) -- does the U-Net's advantage
 over the baseline grow accordingly, or does its own accuracy also degrade?</p>
 <hr/>
-<h2 id="Exercise-2----Local-vs-nominal-$u_%5Ctau$">Exercise 2 -- Local vs nominal $u_\tau$<a class="anchor-link" href="#Exercise-2----Local-vs-nominal-$u_%5Ctau$">¶</a></h2><p>Section 6 uses the <em>nominal</em> $Re_\tau=125$ for the whole dataset to locate
+<h2 id="Experiment-2----Local-vs-nominal-$u_%5Ctau$">Experiment 2 -- Local vs nominal $u_\tau$<a class="anchor-link" href="#Experiment-2----Local-vs-nominal-$u_%5Ctau$">¶</a></h2><p>Section 6 uses the <em>nominal</em> $Re_\tau=125$ for the whole dataset to locate
 $y^+$ grid indices. Instead, compute $u_\tau$ <strong>per snapshot, per wall</strong>
 (<code>u_tau = sqrt(abs(tau_w))</code>, from Section 5's actual local wall-shear stress)
 and use it to locate a genuinely instantaneous $y^+$ index per sample. Does
 training on these (slightly different, snapshot-dependent) targets change the
 results much?</p>
 <hr/>
-<h2 id="Exercise-3----Multiple-z-planes">Exercise 3 -- Multiple z-planes<a class="anchor-link" href="#Exercise-3----Multiple-z-planes">¶</a></h2><p>This notebook used a single fixed <code>z_index</code> (one plane per time snapshot). If
+<h2 id="Experiment-3----Multiple-z-planes">Experiment 3 -- Multiple z-planes<a class="anchor-link" href="#Experiment-3----Multiple-z-planes">¶</a></h2><p>This notebook used a single fixed <code>z_index</code> (one plane per time snapshot). If
 files for other <code>z_index</code> values are available, treat each as an additional,
 independent sample (more data, still no z resolved as a spatial axis -- same
 approach as for an off-wall version of this problem). Does more
 data from different z-planes improve generalization more than, say, a bigger
 model?</p>
 <hr/>
-<h2 id="Exercise-4----Gradient-based-attribution">Exercise 4 -- Gradient-based attribution<a class="anchor-link" href="#Exercise-4----Gradient-based-attribution">¶</a></h2><p>Pick one validation sample and one output position $x_i$ for the $y^+=10$
+<h2 id="Experiment-4----Gradient-based-attribution">Experiment 4 -- Gradient-based attribution<a class="anchor-link" href="#Experiment-4----Gradient-based-attribution">¶</a></h2><p>Pick one validation sample and one output position $x_i$ for the $y^+=10$
 target. Use <code>tf.GradientTape()</code> to compute the gradient of
 <code>Y_val_pred_norm[idx, i, 1]</code> with respect to the normalized input
 <code>X_val[idx:idx+1]</code>. Plot the resulting gradient curve alongside $\tau_w(x)$ --
@@ -11316,7 +11316,7 @@ this shows which upstream/downstream wall-stress fluctuations most influence
 that particular near-wall prediction, and can be extended into a full
 gradient-SHAP analysis.</p>
 <hr/>
-<h2 id="Exercise-5----Does-a-much-simpler-model-do-just-as-well?">Exercise 5 -- Does a much simpler model do just as well?<a class="anchor-link" href="#Exercise-5----Does-a-much-simpler-model-do-just-as-well?">¶</a></h2><p>The 4-level U-Net (Section 11-12) may be more capacity than this fairly smooth
+<h2 id="Experiment-5----Does-a-much-simpler-model-do-just-as-well?">Experiment 5 -- Does a much simpler model do just as well?<a class="anchor-link" href="#Experiment-5----Does-a-much-simpler-model-do-just-as-well?">¶</a></h2><p>The 4-level U-Net (Section 11-12) may be more capacity than this fairly smooth
 1D task needs. Compare it against a much smaller model (e.g. a single
 <code>conv_block</code> with no pooling at all, or a small dense network) on the same
 data. If the simpler model matches the U-Net's validation error, that is
@@ -11332,7 +11332,7 @@ being used here.</p>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Exercise-solutions">Exercise solutions<a class="anchor-link" href="#Exercise-solutions">¶</a></h1><p>The five exercises of Section 15, solved with the notebook's own planes (<code>matched_files</code>), functions (<code>compute_tau_w_both_walls</code>, <code>y_plus_from_wall</code>, <code>create_unet_wall_to_nearwall</code>, <code>conv_block</code>) and training settings (Adam 1e-4 with clipnorm 1, MSE, batch 32, up to 300 epochs, early stopping patience 15, learning-rate halving patience 6). Errors are mean absolute errors (MAE) of <code>u</code> in the stored units, on validation data. <strong>Exercise budget (mine):</strong> every exercise model trains for at most 40 epochs with early stopping (the base allows 300 with its own early stopping; its received run stopped after about 180), and Exercise 3 compares two set-ups; variants are compared under the same budget. Compute plan: five trainings on the CPU, under 25 minutes.</p>
+<h1 id="Experiment-solutions">Experiment solutions<a class="anchor-link" href="#Experiment-solutions">¶</a></h1><p>The five experiments of Section 15, solved with the notebook's own planes (<code>matched_files</code>), functions (<code>compute_tau_w_both_walls</code>, <code>y_plus_from_wall</code>, <code>create_unet_wall_to_nearwall</code>, <code>conv_block</code>) and training settings (Adam 1e-4 with clipnorm 1, MSE, batch 32, up to 300 epochs, early stopping patience 15, learning-rate halving patience 6). Errors are mean absolute errors (MAE) of <code>u</code> in the stored units, on validation data. <strong>Experiment budget (mine):</strong> every experiment model trains for at most 40 epochs with early stopping (the base allows 300 with its own early stopping; its received run stopped after about 180), and Experiment 3 compares two set-ups; variants are compared under the same budget. Compute plan: five trainings on the CPU, under 25 minutes.</p>
 </div>
 </div>
 </div>
@@ -11423,7 +11423,7 @@ check: cached y+=5,10 targets equal the notebook's Y: True
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Exercise-1-%E2%80%94-solution">Exercise 1 — solution<a class="anchor-link" href="#Exercise-1-%E2%80%94-solution">¶</a></h2><p>Five targets, $y^+$ = 5, 10, 20, 30 and 50 (nominal $Re_\tau$ = 125 as in Section 6), with the same U-Net, normalisation scheme, split (<code>random_state=24</code>) and training settings. The linear-law baseline of Section 9 is evaluated at every level.</p>
+<h2 id="Experiment-1-%E2%80%94-solution">Experiment 1 — solution<a class="anchor-link" href="#Experiment-1-%E2%80%94-solution">¶</a></h2><p>Five targets, $y^+$ = 5, 10, 20, 30 and 50 (nominal $Re_\tau$ = 125 as in Section 6), with the same U-Net, normalisation scheme, split (<code>random_state=24</code>) and training settings. The linear-law baseline of Section 9 is evaluated at every level.</p>
 </div>
 </div>
 </div>
@@ -11479,7 +11479,7 @@ Result (Exercise 1): U-Net MAE y+=5: 0.0126, y+=10: 0.0391, y+=20: 0.0767, y+=30
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Exercise-2-%E2%80%94-solution">Exercise 2 — solution<a class="anchor-link" href="#Exercise-2-%E2%80%94-solution">¶</a></h2><p>The local friction velocity is computed per snapshot and per wall from the local wall stress. Note on units: in this notebook $\tau_w$ is the wall gradient $\partial u/\partial y$ in the stored units, so the friction velocity is $u_\tau = \sqrt{\nu\,|\partial u/\partial y|}$ with $\nu = 1/Re$ (<code>Re</code> = 2100 is stored in every file); the exercise's shorthand <code>sqrt(abs(tau_w))</code> omits $\nu$, which would put $y^+$ off by a factor of about 46. With $\nu$ included the mean $Re_\tau$ matches the nominal 125. The $y^+$ = 5 and 10 indices then vary from sample to sample; the U-Net is retrained on these targets with everything else as in the base.</p>
+<h2 id="Experiment-2-%E2%80%94-solution">Experiment 2 — solution<a class="anchor-link" href="#Experiment-2-%E2%80%94-solution">¶</a></h2><p>The local friction velocity is computed per snapshot and per wall from the local wall stress. Note on units: in this notebook $\tau_w$ is the wall gradient $\partial u/\partial y$ in the stored units, so the friction velocity is $u_\tau = \sqrt{\nu\,|\partial u/\partial y|}$ with $\nu = 1/Re$ (<code>Re</code> = 2100 is stored in every file); the experiment's shorthand <code>sqrt(abs(tau_w))</code> omits $\nu$, which would put $y^+$ off by a factor of about 46. With $\nu$ included the mean $Re_\tau$ matches the nominal 125. The $y^+$ = 5 and 10 indices then vary from sample to sample; the U-Net is retrained on these targets with everything else as in the base.</p>
 </div>
 </div>
 </div>
@@ -11531,7 +11531,7 @@ Result (Exercise 2): local Re_tau 126.1 ± 8.8 (min 97.7, max 153.4); MAE with l
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Exercise-3-%E2%80%94-solution">Exercise 3 — solution<a class="anchor-link" href="#Exercise-3-%E2%80%94-solution">¶</a></h2><p>The notebook's file pattern already matches every z-plane, so the base model was trained on all planes. The exercise is therefore run the other way round: compare a bigger model (<code>base_filters=32</code>) trained on a single z-plane per snapshot (z index 0) with the notebook's model size trained on all z-planes. To make the comparison honest, the split is <strong>by snapshot</strong> (the last 20 % of snapshot numbers are held out, all their z-planes), so no snapshot appears in both training and test; both models are scored on the same held-out samples.</p>
+<h2 id="Experiment-3-%E2%80%94-solution">Experiment 3 — solution<a class="anchor-link" href="#Experiment-3-%E2%80%94-solution">¶</a></h2><p>The notebook's file pattern already matches every z-plane, so the base model was trained on all planes. The experiment is therefore run the other way round: compare a bigger model (<code>base_filters=32</code>) trained on a single z-plane per snapshot (z index 0) with the notebook's model size trained on all z-planes. To make the comparison honest, the split is <strong>by snapshot</strong> (the last 20 % of snapshot numbers are held out, all their z-planes), so no snapshot appears in both training and test; both models are scored on the same held-out samples.</p>
 </div>
 </div>
 </div>
@@ -11590,7 +11590,7 @@ Result (Exercise 3): held-out-snapshot MAE (y+=5 / 10): single z-plane (z=0), 32
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Exercise-4-%E2%80%94-solution">Exercise 4 — solution<a class="anchor-link" href="#Exercise-4-%E2%80%94-solution">¶</a></h2><p>Gradient of the base model's normalised $y^+=10$ prediction at one position $x_i$ with respect to the normalised input $\tau_w(x)$, for the validation sample of Section 14 (<code>idx = -1</code>) and $x_i$ at the centre of the domain. Periodicity of the domain is respected in the plot by showing the offset $x - x_i$.</p>
+<h2 id="Experiment-4-%E2%80%94-solution">Experiment 4 — solution<a class="anchor-link" href="#Experiment-4-%E2%80%94-solution">¶</a></h2><p>Gradient of the base model's normalised $y^+=10$ prediction at one position $x_i$ with respect to the normalised input $\tau_w(x)$, for the validation sample of Section 14 (<code>idx = -1</code>) and $x_i$ at the centre of the domain. Periodicity of the domain is respected in the plot by showing the offset $x - x_i$.</p>
 </div>
 </div>
 </div>
@@ -11651,7 +11651,7 @@ Result (Exercise 3): held-out-snapshot MAE (y+=5 / 10): single z-plane (z=0), 32
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Exercise-5-%E2%80%94-solution">Exercise 5 — solution<a class="anchor-link" href="#Exercise-5-%E2%80%94-solution">¶</a></h2><p>Two much smaller models on the notebook's data, split and training settings: (a) one <code>conv_block</code> (two 3-point convolutions, 16 filters) with no pooling, followed by a 1×1 output convolution, so each output sees only 5 neighbouring wall points; (b) a small dense network on the whole 384-point profile (384 → 128 → 768, reshaped to 384×2).</p>
+<h2 id="Experiment-5-%E2%80%94-solution">Experiment 5 — solution<a class="anchor-link" href="#Experiment-5-%E2%80%94-solution">¶</a></h2><p>Two much smaller models on the notebook's data, split and training settings: (a) one <code>conv_block</code> (two 3-point convolutions, 16 filters) with no pooling, followed by a 1×1 output convolution, so each output sees only 5 neighbouring wall points; (b) a small dense network on the whole 384-point profile (384 → 128 → 768, reshaped to 384×2).</p>
 </div>
 </div>
 </div>
@@ -11708,12 +11708,12 @@ Result (Exercise 5): validation MAE (y+=5 / 10): U-Net (base) (677122 params): 0
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Summary-of-the-exercise-solutions">Summary of the exercise solutions<a class="anchor-link" href="#Summary-of-the-exercise-solutions">¶</a></h2><ul>
-<li><strong>Exercise 1:</strong> accuracy of the U-Net and of the linear law at five wall distances.</li>
-<li><strong>Exercise 2:</strong> local versus nominal friction velocity for locating $y^+$, with the unit note on $\nu$.</li>
-<li><strong>Exercise 3:</strong> single versus all z-planes, and a bigger model, under a snapshot-wise split.</li>
-<li><strong>Exercise 4:</strong> which wall-stress points the $y^+=10$ prediction depends on.</li>
-<li><strong>Exercise 5:</strong> how much of the U-Net's capacity this task uses.</li>
+<h2 id="Summary-of-the-experiment-solutions">Summary of the experiment solutions<a class="anchor-link" href="#Summary-of-the-experiment-solutions">¶</a></h2><ul>
+<li><strong>Experiment 1:</strong> accuracy of the U-Net and of the linear law at five wall distances.</li>
+<li><strong>Experiment 2:</strong> local versus nominal friction velocity for locating $y^+$, with the unit note on $\nu$.</li>
+<li><strong>Experiment 3:</strong> single versus all z-planes, and a bigger model, under a snapshot-wise split.</li>
+<li><strong>Experiment 4:</strong> which wall-stress points the $y^+=10$ prediction depends on.</li>
+<li><strong>Experiment 5:</strong> how much of the U-Net's capacity this task uses.</li>
 </ul>
 <p>The numbers are those printed in the <code>Result</code> lines above.</p>
 </div>
@@ -11817,7 +11817,7 @@ Result (Exercise 5): validation MAE (y+=5 / 10): U-Net (base) (677122 params): 0
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Three-seed-repeats">Three-seed repeats<a class="anchor-link" href="#Three-seed-repeats">¶</a></h1><p>Every training of 15 minutes or less is repeated with the seeds 0, 1 and 2. <strong>Seed 0 is the base run</strong>: the notebook's own U-Net training above (seeds set in the import cell) and the exercise solutions (<code>seed=0</code>). For seeds 1 and 2, <code>tf.keras.utils.set_random_seed(seed)</code> sets the initial weights and the batch order; data, split, settings and device are unchanged. A training whose base run took longer than 15 minutes is not repeated, and the summary says so. One cell per seed, then a summary of the validation MAE of u (stored units).</p>
+<h1 id="Three-seed-repeats">Three-seed repeats<a class="anchor-link" href="#Three-seed-repeats">¶</a></h1><p>Every training of 15 minutes or less is repeated with the seeds 0, 1 and 2. <strong>Seed 0 is the base run</strong>: the notebook's own U-Net training above (seeds set in the import cell) and the experiment solutions (<code>seed=0</code>). For seeds 1 and 2, <code>tf.keras.utils.set_random_seed(seed)</code> sets the initial weights and the batch order; data, split, settings and device are unchanged. A training whose base run took longer than 15 minutes is not repeated, and the summary says so. One cell per seed, then a summary of the validation MAE of u (stored units).</p>
 </div>
 </div>
 </div>
